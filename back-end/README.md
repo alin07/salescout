@@ -4,7 +4,7 @@
 
 In your terminal, change directory from root to /back-end and run:
 
-`psql -U alin -d salescout -a -f ./db/salescout.sql`
+`psql -U <username> -d salescout -a -f ./db/salescout.sql`
 
 ## 2. Python
 
