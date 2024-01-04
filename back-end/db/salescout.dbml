@@ -1,0 +1,110 @@
+Project salescout {
+  database_type: 'PostgreSQL'
+  Note: 'DB Schema for Salescout'
+
+  Table account as acc {
+    account_id int [pk, increment, not null]
+    profile_pic_name varchar(30)
+    profile_pic bytea
+    first_name varchar(30) [not null]
+    last_name varchar(30) [not null]
+    email varchar [not null]
+    password_hash varchar [not null]
+    salt varchar
+    create_time timestamp  [default: `now()`]
+    update_time timestamp [default: `now()`]
+  }
+
+  Table brand as b {
+    brand_id int [pk, increment, not null]
+    name varchar(30) [not null]
+    create_time timestamp [default: `now()`]
+    update_time timestamp [default: `now()`]
+  }
+
+  Table subscription as sub {
+    subscription_id int [pk, increment, not null]
+    brand_id int [not null, ref: > b.brand_id]
+    account_id int [not null, ref: > acc.account_id]
+    create_time timestamp [default: `now()`]
+    update_time timestamp [default: `now()`]
+  }
+
+  Table sale_item as si {
+    sale_item_id int [pk, increment, not null]
+    brand_id int [not null, ref: > b.brand_id]
+    name varchar(30) [not null]
+    description text 
+    item_variation_id int [not null, ref: - id.item_variation_id]
+    create_time timestamp [default: `now()`]
+    update_time timestamp [default: `now()`]
+  }
+
+  Table size as s {
+    size_id int [pk, increment, not null]
+    name varchar(15) [not null]
+    create_time timestamp [default: `now()`]
+    update_time timestamp [default: `now()`]
+  }
+
+  Table gender as g {
+    gender_id int [pk, increment, not null]
+    name varchar(10) [not null]
+    create_time timestamp [default: `now()`]
+    update_time timestamp [default: `now()`]
+  }
+
+  Table clothing_article as ca {
+    clothing_article_id int [pk, increment, not null]
+    name varchar(25) [not null]
+    create_time timestamp [default: `now()`]
+    update_time timestamp [default: `now()`]
+  }
+
+  Table color as c {
+    color_id int [pk, increment, not null]
+    name varchar(25) [not null]
+    color_category_id int [ref: - cc.color_category_id]
+    create_time timestamp [default: `now()`]
+    update_time timestamp [default: `now()`]
+  }
+
+  Table color_category as cc {
+    color_category_id int [pk, increment, not null]
+    color varchar(20) [not null]
+    create_time timestamp [default: `now()`]
+    update_time timestamp [default: `now()`]
+  }
+
+  Table item_variation as id {
+    item_variation_id int [pk, increment, not null]
+    color_id int [ref: - c.color_id]
+    clothing_article_id int [ref: - ca.clothing_article_id]
+    gender_id int [ref: - g.gender_id]
+    size_id int [ref: - s.size_id]
+    sale_price money [not null]
+    original_price money
+    is_sale bool [not null, default: true] 
+    sale_end_time timestamp [default: null]
+    create_time timestamp [default: `now()`]
+    update_time timestamp [default: `now()`]
+  }
+
+  Table list as l {
+    list_id int [pk, increment, not null]
+    list_image_name varchar(30)
+    list_image bytea
+    name varchar(25)
+    description text 
+    account_id int [ref: > acc.account_id]
+    create_time timestamp [default: `now()`]
+    update_time timestamp [default: `now()`]
+  }
+
+  Table list_item as li {
+    list_item_id int [pk, increment, not null]
+    list_id int [not null, ref: > l.list_id]
+    sale_item_id int [not null, ref: > si.sale_item_id]
+  }
+
+}
